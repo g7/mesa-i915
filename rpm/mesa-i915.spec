@@ -80,6 +80,7 @@ Mesa libGLESv1 runtime library.
 Summary:    Mesa libGLESv2 runtime libraries
 Group:      System/Libraries
 Requires:   %{name} = %{version}-%{release}
+Requires:   %{name}-libglapi = %{version}-%{release}
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Provides:   libGLESv2 = %{version}-%{release}
