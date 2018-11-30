@@ -318,6 +318,8 @@ popd
 
 %postun libwayland-egl -p /sbin/ldconfig
 
+%files
+
 %files libgbm
 %defattr(-,root,root,-)
 /usr/lib/libgbm.so.1
