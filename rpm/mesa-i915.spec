@@ -1,18 +1,16 @@
 # Conditional building of X11 related things
 %bcond_with X11
-%define mesa_version 9.2.5
 
-Name:       mesa-llvmpipe
+Name:       mesa-i915
 
-Summary:    Mesa graphics libraries built for LLVMpipe
-Version:    9.2.5
+Summary:    Mesa graphics libraries built for i915
+Version:    0.0.0
 Release:    0
 Group:      System/Libraries
 License:    MIT
 URL:        http://www.mesa3d.org/
 Source0:    %{name}-%{version}.tar.bz2
-Source1:    mesa-llvmpipe-rpmlintrc
-Patch0:     eglplatform_no_x11.patch
+Source1:    mesa-i915-rpmlintrc
 
 %if %{with X11}
 BuildRequires:  pkgconfig(glproto)
@@ -26,7 +24,8 @@ BuildRequires:  pkgconfig(xi)
 BuildRequires:  pkgconfig(xmu)
 BuildRequires:  makedepend
 %endif
-BuildRequires:  pkgconfig(libdrm)
+BuildRequires:  pkgconfig(pthread-stubs)
+BuildRequires:  pkgconfig(libdrm) >= 2.4.52
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(talloc)
 BuildRequires:  pkgconfig(libudev) >= 160
@@ -34,7 +33,7 @@ BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig autoconf automake
 BuildRequires:  expat-devel >= 2.0
-BuildRequires:  python
+BuildRequires:  python-mako >= 0.3.4
 BuildRequires:  libxml2-python
 BuildRequires:  bison
 BuildRequires:  flex
@@ -45,6 +44,16 @@ BuildRequires:  gettext
 Mesa is an open-source implementation of the OpenGL specification  -
 a system for rendering interactive 3D graphics.
 
+%package libgbm
+Summary:    Generic buffer management API
+Group:      System/Libraries
+Requires:   %{name} = %{version}-%{release}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+Provides:   libgbm = %{version}-%{release}
+
+%description libgbm
+Generic buffer management API
 
 %package libglapi
 Summary:    Mesa shared gl api library
@@ -113,11 +122,21 @@ Provides:   libEGL.so
 %description libEGL-compat
 Mesa libEGL runtime compatibility library.
 
+%package libgbm-devel
+Summary:    Mesa libgbm development package
+Group:      System/Libraries
+Requires:   %{name} = %{version}-%{release}
+Requires:   mesa-i915-libgbm = %{version}-%{release}
+Provides:   libgbm-devel
+
+%description libgbm-devel
+Mesa libgbm development package.
+
 %package libglapi-devel
 Summary:    Mesa libglapi development package
 Group:      System/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   mesa-llvmpipe-libglapi = %{version}-%{release}
+Requires:   mesa-i915-libglapi = %{version}-%{release}
 Provides:   libglapi-devel
 
 %description libglapi-devel
@@ -127,7 +146,7 @@ Mesa libglapi development package.
 Summary:    Mesa libGLESv1 development package
 Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   mesa-llvmpipe-libGLESv1 = %{version}-%{release}
+Requires:   mesa-i915-libGLESv1 = %{version}-%{release}
 Provides:   libGLESv1-devel
 
 %description libGLESv1-devel
@@ -137,9 +156,9 @@ Mesa libGLESv1 development packages
 Summary:    Mesa libGLESv2 development package
 Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   mesa-llvmpipe-libGLESv2 = %{version}-%{release}
+Requires:   mesa-i915-libGLESv2 = %{version}-%{release}
 Provides:   libGLESv2-devel
-Obsoletes:   mesa-llvmpipe-libGLESv2-compat
+Obsoletes:   mesa-i915-libGLESv2-compat
 
 %description libGLESv2-devel
 Mesa libGLESv2 development packages
@@ -148,9 +167,9 @@ Mesa libGLESv2 development packages
 Summary:    Mesa libEGL development package
 Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   mesa-llvmpipe-libEGL = %{version}-%{release}
+Requires:   mesa-i915-libEGL = %{version}-%{release}
 Provides:   libEGL-devel
-Obsoletes:   mesa-llvmpipe-libEGL-compat
+Obsoletes:   mesa-i915-libEGL-compat
 
 %description libEGL-devel
 Mesa libEGL development packages
@@ -172,8 +191,8 @@ Mesa libGL runtime library.
 Summary:    Mesa libGL development package
 Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   mesa-llvmpipe-libGL = %{version}-%{release}
 %if %{with X11}
+Requires:   mesa-i915-libGL = %{version}-%{release}
 Requires:   libX11-devel
 %endif
 Provides:   libGL-devel
@@ -189,22 +208,22 @@ Requires:   %{name} = %{version}-%{release}
 %description dri-drivers-devel
 Mesa-based DRI driver development files.
 
-%package dri-swrast-driver
+%package dri-i915-driver
 Summary:    Mesa-based DRI drivers
 Group:      Graphics/Display and Graphics Adaptation
 Requires:   %{name} = %{version}-%{release}
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-Provides:   mesa-llvmpipe-dri-drivers = %{version}-%{release}
+Provides:   mesa-i915-dri-drivers = %{version}-%{release}
 
-%description dri-swrast-driver
-Mesa-based swrast DRI driver.
+%description dri-i915-driver
+Mesa-based i915 DRI driver.
 
 %package libwayland-egl-devel
 Summary:    Mesa libwayland-egl development package
 Group:      Development/Libraries
 Requires:   %{name} = %{version}-%{release}
-Requires:   mesa-llvmpipe-libwayland-egl = %{version}-%{release}
+Requires:   mesa-i915-libwayland-egl = %{version}-%{release}
 Provides:   libwayland-egl-devel
 
 %description libwayland-egl-devel
@@ -224,32 +243,25 @@ Mesa libwayland-egl runtime libraries
 %prep
 %setup -q -n %{name}-%{version}/mesa
 
-%if ! %{with X11}
-# eglplatform_no_x11.patch
-%patch0 -p1
-%endif
-
-%build
 %autogen --disable-static \
+    --enable-egl \
     --enable-dri \
-    --with-dri-drivers=swrast \
-    --enable-osmesa=no \
-    --enable-gallium-egl \
-    --enable-gallium-llvm \
-    --with-gallium-drivers=swrast \
+    --enable-dri3=no \
+    --with-dri-drivers=i915 \
 %if %{with X11}
-    --with-egl-platforms=x11,fbdev,wayland \
+    --with-egl-platforms=x11,drm,wayland \
     --with-x \
     --enable-glx-tls \
-    --enable-glx=yes \
+    --enable-glx \
 %else
-    --with-egl-platforms=fbdev,wayland \
-    --disable-glx \
-    --disable-xlib-glx \
+    --with-egl-platforms=drm,wayland \
+    --enable-glx=no \
 %endif
-    --enable-egl=yes \
-    --enable-gles1=yes \
-    --enable-gles2=yes
+    --without-gallium-drivers \
+    --disable-gallium-llvm \
+    --disable-llvm-shared-libs \
+    --enable-gles1 \
+    --enable-gles2
 
 make %{?jobs:-j%jobs}
 
@@ -260,9 +272,13 @@ rm -rf %{buildroot}
 # strip out undesirable headers
 rm -f $RPM_BUILD_ROOT/etc/drirc
 pushd $RPM_BUILD_ROOT%{_includedir}/GL
-rm [a-fh-np-wyz]*.h
-rm osmesa.h
+#rm [a-fh-np-wyz]*.h
+#rm osmesa.h
 popd
+
+%post libgbm -p /sbin/ldconfig
+
+%postun libgbm -p /sbin/ldconfig
 
 %post libglapi -p /sbin/ldconfig
 
@@ -294,17 +310,18 @@ popd
 %postun libGL -p /sbin/ldconfig
 %endif
 
-%post dri-swrast-driver -p /sbin/ldconfig
+%post dri-i915-driver -p /sbin/ldconfig
 
-%postun dri-swrast-driver -p /sbin/ldconfig
+%postun dri-i915-driver -p /sbin/ldconfig
 
 %post libwayland-egl -p /sbin/ldconfig
 
 %postun libwayland-egl -p /sbin/ldconfig
 
-%files
+%files libgbm
 %defattr(-,root,root,-)
-%{_libdir}/egl/egl_gallium.so
+/usr/lib/libgbm.so.1
+/usr/lib/libgbm.so.1.*
 
 %files libglapi
 %defattr(-,root,root,-)
@@ -334,6 +351,12 @@ popd
 %defattr(-,root,root,-)
 %{_libdir}/libEGL.so
 
+%files libgbm-devel
+%defattr(-,root,root,-)
+/usr/include/gbm.h
+/usr/lib/libgbm.so
+/usr/lib/pkgconfig/gbm.pc
+
 %files libglapi-devel
 %defattr(-,root,root,-)
 %{_libdir}/libglapi.so
@@ -354,8 +377,10 @@ popd
 %{_includedir}/GLES2/gl2ext.h
 %{_includedir}/GLES2/gl2platform.h
 %{_includedir}/GLES3/gl3.h
+%{_includedir}/GLES3/gl31.h
 %{_includedir}/GLES3/gl3ext.h
 %{_includedir}/GLES3/gl3platform.h
+%{_includedir}/GLES3/gl32.h
 %{_libdir}/pkgconfig/glesv2.pc
 
 %files libEGL-devel
@@ -366,6 +391,7 @@ popd
 %{_includedir}/EGL/eglext.h
 %{_includedir}/EGL/eglplatform.h
 %{_includedir}/EGL/eglmesaext.h
+%{_includedir}/EGL/eglextchromium.h
 %dir %{_includedir}/KHR
 %{_includedir}/KHR/khrplatform.h
 %{_libdir}/pkgconfig/egl.pc
@@ -378,28 +404,20 @@ popd
 
 %files libGL-devel
 %defattr(-,root,root,-)
-%{_includedir}/GL/gl.h
-%{_includedir}/GL/gl_mangle.h
-%{_includedir}/GL/glext.h
-%{_includedir}/GL/glx.h
-%{_includedir}/GL/glx_mangle.h
-%{_includedir}/GL/glxext.h
+%{_includedir}/GL/*.h
 %dir %{_includedir}/GL/internal
 %{_includedir}/GL/internal/dri_interface.h
 %if %{with X11}
 %{_libdir}/libGL.so
 %endif
-%{_libdir}/pkgconfig/gl.pc
 
 %files dri-drivers-devel
 %defattr(-,root,root,-)
-%{_libdir}/libdricore%{mesa_version}.so
 %{_libdir}/pkgconfig/dri.pc
 
-%files dri-swrast-driver
+%files dri-i915-driver
 %defattr(-,root,root,-)
-%{_libdir}/libdricore%{mesa_version}.so.*
-%{_libdir}/dri/swrast_dri.so
+%{_libdir}/dri/i915_dri.so
 
 %files libwayland-egl-devel
 %defattr(-,root,root,-)
