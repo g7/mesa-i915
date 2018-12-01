@@ -34,6 +34,7 @@ BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig autoconf automake
 BuildRequires:  expat-devel >= 2.0
+BuildRequires:  python
 BuildRequires:  python-mako >= 0.3.4
 BuildRequires:  libxml2-python
 BuildRequires:  bison
