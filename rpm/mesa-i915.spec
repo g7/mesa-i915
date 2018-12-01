@@ -257,7 +257,7 @@ Mesa libwayland-egl runtime libraries
     --enable-egl \
     --enable-dri \
     --enable-dri3=no \
-    --with-dri-drivers=i915 \
+    --with-dri-drivers=i915,i965 \
 %if %{with X11}
     --with-egl-platforms=x11,drm,wayland \
     --with-x \
@@ -430,6 +430,7 @@ popd
 %files dri-i915-driver
 %defattr(-,root,root,-)
 %{_libdir}/dri/i915_dri.so
+%{_libdir}/dri/i965_dri.so
 
 %files libwayland-egl-devel
 %defattr(-,root,root,-)
