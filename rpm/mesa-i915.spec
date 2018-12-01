@@ -252,6 +252,7 @@ Mesa libwayland-egl runtime libraries
 %patch0 -p1
 %endif
 
+%build
 %autogen --disable-static \
     --enable-egl \
     --enable-dri \
